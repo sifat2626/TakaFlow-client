@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 import { useState } from "react";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 function Register() {
   const [isLoading, setIsLoading] = useState(false);
-  const axiosSecure = useAxiosSecure();
+  const { register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state || "/";
@@ -27,11 +27,9 @@ function Register() {
     };
 
     try {
-      setIsLoading(true);
-      const { data } = await axiosSecure.post("/register", registerData);
-      console.log(data.user);
-      toast.success("Register successful");
+      register(registerData);
       navigate(from, { replace: true });
+      toast.success("Register successful");
     } catch (error) {
       console.error(error);
       toast.error("Registration failed. Please try again.");
